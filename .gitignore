@@ -14,7 +14,7 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
-.idea
+.idea/
 *.iws
 *.iml
 *.ipr
@@ -31,3 +31,34 @@ build/
 
 ### VS Code ###
 .vscode/
+
+############################################
+# Logs
+############################################
+*.log
+logs/
+*.out
+
+############################################
+# Environment / secrets
+############################################
+.env
+.env.*
+application-local.properties
+application-local.yml
+application-dev.properties
+application-dev.yml
+
+
+############################################
+# Local databases
+############################################
+*.db
+*.sqlite
+*.h2.db
+*.mv.db
+
+############################################
+# Node modules 
+############################################
+node_modules/

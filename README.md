@@ -1,10 +1,10 @@
-AI Learning Management System (LMS)
+***AI Learning Management System (LMS)***
 
 Overview
 This project is an AI-powered Learning Management System (LMS) built using Spring Boot.
 The system will allow instructors to create courses, manage learning materials, and track student progress.
 
-AI Features (Planned)
+**AI Features (Planned)**
 
 The LMS will include AI tools to help students understand educational videos:
 
@@ -14,7 +14,7 @@ The LMS will include AI tools to help students understand educational videos:
 - AI-generated quiz questions
 - Timestamp-based explanations
 
-Technologies
+**Technologies**
 Java 17
 Spring Boot
 Maven
@@ -23,7 +23,7 @@ Spring Data JPA
 Lombok
 
 
-Planned Features
+**Planned Features**
 User authentication (students & instructors)
 Course creation and management
 AI-powered learning recommendations
@@ -32,8 +32,8 @@ Progress tracking and analytics
 REST API for course and user management
 
 
-Project Setup
-Prerequisites
+**Project Setup**
+**Prerequisites**
 Install the following tools:
 Java Development Kit (JDK 17 or newer)
 Maven
@@ -43,18 +43,18 @@ java -version
 mvn -v
 
 
-Run the Application
+**Run the Application**
 ./mvnw spring-boot
 or
 mvn spring-boot
 
 
-Test Endpoint
+**Test Endpoint**
 http://localhost:8080/welcome
 Response:
 Welcome to my Spring Boot application!
 
-Week 1 Progress
+**Week 1 Progress**
 Development environment setup
 Spring Boot project creation
 Basic REST endpoint

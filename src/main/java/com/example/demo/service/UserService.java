@@ -7,6 +7,6 @@ public interface UserService {
 
     User registerUser(UserRegistrationDto userData);
     User findByUsername(String username);
-    // Define user-related operations here, e.g., registration, authentication, etc.
+
 }
 

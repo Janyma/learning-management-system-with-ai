@@ -1,6 +1,4 @@
 package com.example.demo.model;
-import java.util.UUID;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,7 +12,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    private UUID id;
+    private Long id;
 
     @Column(nullable = false, unique = true, length = 50)
     private String username;
@@ -24,11 +22,11 @@ public class User {
 
     public User() {}
 
-    public UUID getId(){
+    public Long getId(){
         return id;
     }
 
-    public void setId(UUID id){
+    public void setId(Long id){
         this.id = id;
     }
 

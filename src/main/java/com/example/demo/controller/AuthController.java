@@ -38,13 +38,13 @@ public class AuthController {
     public ResponseEntity<String> loginUser(@RequestBody UserLoginDto userData){
         User user = userService.findByUsername(userData.getUsername());
         if(user == null){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Username or password is uncorrect");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Username or password is uncorrect.");
         }
 
-        boolean matches = passwordEncoder.matches(user.getPasswordHash(), userData.getPassword());
+        boolean matches = passwordEncoder.matches(userData.getPassword(), user.getPasswordHash());
 
         if(!matches){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Username or password is uncorrect");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Username or password is uncorrect-");
         }
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).body("Correct password");

@@ -2,6 +2,7 @@ package com.example.demo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -81,6 +82,35 @@ class UserServiceImplTest {
 
 
 	}
+
+    @Test
+	void shouldFindByName() {
+        User user = new User();
+        user.setUsername("username123");
+        when(userRepository.findByUsername("username123")).thenReturn(user);
+
+        User result = userRepository.findByUsername("username123");
+        assertNotNull(result);
+        assertEquals("username123", result.getUsername());
+
+
+
+
+	}
+
+    @Test
+	void shouldNotFindByName() {
+        User username = new User();
+        username.setUsername("username123");
+        when(userRepository.findByUsername("username123")).thenReturn(null);
+        User result = userRepository.findByUsername("username123");
+
+
+        assertNull(result);
+
+
+	}
+
 
     
 

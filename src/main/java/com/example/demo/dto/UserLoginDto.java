@@ -5,7 +5,7 @@ public class UserLoginDto {
     private String username;
     private String password;
 
-    UserLoginDto() {
+    public UserLoginDto() {
     }
 
     public String getUsername() {

@@ -62,3 +62,4 @@ application-dev.yml
 # Node modules 
 ############################################
 node_modules/
+.DS_Store

@@ -1,10 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule,  Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-register',
-  imports: [],
+  imports: [ReactiveFormsModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })
@@ -31,11 +32,16 @@ export class RegisterComponent {
     this.success.set('');
     this.error.set('');
 
-    this.authService.register(this.form.getRawValue()).subscribe({
+    this.authService.register(this.form.getRawValue())
+
+    .subscribe({
       next:()=> {
         this.success.set("Register successfull");
+        this.form.reset();
+        this.loading.set(false);
       },
       error: ()=>{
+        console.log(this.error);
         this.error.set('Registration failed');
         this.loading.set(false);
       }

@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,16 +25,20 @@ public class AuthController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @RequestMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody UserRegistrationDto userData){
-        try {
-            User user=userService.registerUser(userData);
-            return ResponseEntity.status(HttpStatus.CREATED).body("User created" + user);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed"+ e.getMessage());
+        @RequestMapping("/register")
+        public ResponseEntity<?> registerUser(@RequestBody UserRegistrationDto userData){
+            try {
+                User user = userService.registerUser(userData);
+                return ResponseEntity.status(HttpStatus.CREATED)
+                .body(Map.of(
+                    "message", "User created",
+                    "userId", user.getId()
+                ));
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Map.of("error", e.getMessage()));
+            }
         }
-
-    }
 
     @RequestMapping("/login")
     public ResponseEntity<String> loginUser(@RequestBody UserLoginDto userData){

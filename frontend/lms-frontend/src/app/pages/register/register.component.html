@@ -1,7 +1,7 @@
-<section>
+<section class="authorisation-container">
     <h2>Register</h2>
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
-        <input type="text" formControlName="username">
+    <form class="form-group" [formGroup]="form" (ngSubmit)="onSubmit()">
+        <input type="text" placeholder="Username" formControlName="username">
         <input type="password" placeholder="Password" formControlName="password">
 
         <button type="submit" 

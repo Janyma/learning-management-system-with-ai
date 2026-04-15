@@ -1,10 +1,13 @@
 package com.example.demo.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +16,8 @@ import com.example.demo.dto.UserLoginDto;
 import com.example.demo.dto.UserRegistrationDto;
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -26,7 +31,20 @@ public class AuthController {
     }
 
         @RequestMapping("/register")
-        public ResponseEntity<?> registerUser(@RequestBody UserRegistrationDto userData){
+        public ResponseEntity<?> registerUser(@Valid @RequestBody UserRegistrationDto userData, BindingResult bindingResult){
+            if (bindingResult.hasErrors()) {
+                Map<String, String> errors = new HashMap<>();
+
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                errors.put(error.getField(), error.getDefaultMessage());
+            }
+
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(errors);
+                
+            }
+            
             try {
                 User user = userService.registerUser(userData);
                 return ResponseEntity.status(HttpStatus.CREATED)

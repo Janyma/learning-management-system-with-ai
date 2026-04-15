@@ -1,7 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule,  Validators } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../services/auth-service/auth.service';
 import { finalize } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-register',
@@ -35,14 +36,18 @@ export class RegisterComponent {
     this.authService.register(this.form.getRawValue())
 
     .subscribe({
-      next:()=> {
-        this.success.set("Register successfull");
+      next:(res: any)=> {
+        const msg= res?.message ?? 'Register successfull'
+        this.success.set(msg);
         this.form.reset();
         this.loading.set(false);
       },
-      error: ()=>{
-        console.log(this.error);
-        this.error.set('Registration failed');
+      error: (err: HttpErrorResponse)=>{
+        console.error(err);
+        const msg= err?.error.message ?? err?.message ?? 'Registration failed'
+        
+        
+        this.error.set(msg);
         this.loading.set(false);
       }
     })

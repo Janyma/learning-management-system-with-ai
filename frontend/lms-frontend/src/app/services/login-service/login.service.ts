@@ -13,7 +13,7 @@ export class LoginService {
   private http=inject(HttpClient);
   private apiUrl= 'http://localhost:8080/api/auth/login';
 
-  register(payload: LoginRequest){
+  login(payload: LoginRequest){
     return this.http.post(this.apiUrl, payload);
   }
 }

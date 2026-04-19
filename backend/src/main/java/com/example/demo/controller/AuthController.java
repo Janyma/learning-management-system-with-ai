@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -58,20 +59,21 @@ public class AuthController {
             }
         }
 
-    @RequestMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody UserLoginDto userData){
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, String>> loginUser(@RequestBody UserLoginDto userData){
         User user = userService.findByUsername(userData.getUsername());
         if(user == null){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Username or password is uncorrect.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).
+            body(Map.of("error","Username or password is uncorrect."));
         }
 
         boolean matches = passwordEncoder.matches(userData.getPassword(), user.getPasswordHash());
 
         if(!matches){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Username or password is uncorrect-");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Username or password is uncorrect-"));
         }
 
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Correct password");
+        return ResponseEntity.ok(Map.of("message","Correct password"));
         
 
 

@@ -1,1 +1,19 @@
-<section>Login Page</section>
+<section class="authorisation-container">
+    <h3>Login</h3>
+    <form class="form-group" [formGroup]="form" (ngSubmit)="onSubmit()">
+        <label for="">Username</label>
+        <input type="text" placeholder="Username" formControlName="username">
+        <label for="">Password</label>
+        <input type="password" placeholder="Password" formControlName="password">
+
+        <button class="actions" type="submit" 
+                [disabled]="loading()">{{loading()? 'Submitting ': 'Login'}}</button>
+    </form>
+
+    @if(success()){
+        <p> {{success()}}</p>
+    }
+    @if(error()){
+        <p>{{error()}}</p>
+    }
+</section>

@@ -1,0 +1,38 @@
+package com.example.demo.controller;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.dto.ChatRequest;
+import com.example.demo.dto.ChatResponse;
+import com.example.demo.service.ChatService;
+
+import jakarta.validation.Valid;
+
+
+
+@RestController
+@RequestMapping("/api/chat")
+public class ChatController{
+
+
+    private final ChatService chatService;
+
+    public ChatController(ChatService chatService) {
+        this.chatService = chatService;
+    }
+
+    @PostMapping
+    public ResponseEntity<ChatResponse> chat(
+            @Valid @RequestBody ChatRequest request) {
+
+        String reply = chatService.getChatResponse(request.getMessage());
+
+        return ResponseEntity.ok(new ChatResponse(reply));
+    }
+
+
+}

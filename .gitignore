@@ -64,3 +64,4 @@ application-dev.yml
 node_modules/
 .DS_Store
 .env
+application.properties

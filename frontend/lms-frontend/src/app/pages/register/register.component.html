@@ -1,19 +1,29 @@
-<section class="authorisation-container">
-    <h3>Register</h3>
-    <form class="form-group" [formGroup]="form" (ngSubmit)="onSubmit()">
-        <label for="">Username</label>
-        <input type="text" placeholder="Username" formControlName="username">
-        <label for="">Password</label>
-        <input type="password" placeholder="Password" formControlName="password">
-
-        <button class="actions" type="submit" 
-                [disabled]="loading()">{{loading()? 'Submitting ': 'Register'}}</button>
+<section class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h2>Create Account</h2>
+      <p>Start your learning journey today</p>
+    </div>
+    <form class="auth-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-field">
+        <label>Username</label>
+        <input type="text" placeholder="Choose a username" formControlName="username">
+      </div>
+      <div class="form-field">
+        <label>Password</label>
+        <input type="password" placeholder="Create a password" formControlName="password">
+      </div>
+      <button class="auth-btn" type="submit"
+              [disabled]="loading()">{{loading() ? 'Creating account...' : 'Create Account'}}</button>
     </form>
 
     @if(success()){
-        <p> {{success()}}</p>
+      <p class="msg msg--success">{{success()}}</p>
     }
     @if(error()){
-        <p>{{error()}}</p>
+      <p class="msg msg--error">{{error()}}</p>
     }
+
+    <p class="auth-footer">Already have an account? <a routerLink="/login">Sign in</a></p>
+  </div>
 </section>

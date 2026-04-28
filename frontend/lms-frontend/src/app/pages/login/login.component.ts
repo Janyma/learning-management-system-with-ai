@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import {  FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LoginService } from '../../services/login-service/login.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from 'express';
 
 
 @Component({
@@ -13,6 +14,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class LoginComponent {
     private fb=inject(FormBuilder);
     private loginService=inject(LoginService);
+    private router=inject(Router);
 
     loading =signal(false);
     success = signal('');
@@ -38,10 +40,9 @@ export class LoginComponent {
 
     .subscribe({
       next:(res: any)=> {
-        const msg= res?.message ?? 'Login successfull'
-        this.success.set(msg);
-        this.form.reset();
+        
         this.loading.set(false);
+        this.router.navigate(['/chat']);
       },
       error: (err: HttpErrorResponse)=>{
         console.error(err);

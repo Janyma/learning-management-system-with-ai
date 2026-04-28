@@ -1,0 +1,25 @@
+<div class="chat-container">
+    <div class="messages">
+        @for(msg of messages(); track $index){
+            <div class="message" [class]="msg.role">
+                <strong>{{msg.role === 'user' ? 'You' : 'AI'}}:</strong>
+                <span>{{msg.text}}</span>
+
+            </div>
+        }
+        @if(loading()){
+            <div class="message assistant loading">Typing...</div>
+        }
+
+    </div>
+
+    <form (ngSubmit)="send()" class="input-area">
+        <input type="text"
+        [(ngModel)]="message"
+        name="message"
+        placeholder="Type a message.."
+        autocomplete="off"
+        />
+        <button type="submit" [disabled]="loading()">Send</button>
+    </form>
+</div>

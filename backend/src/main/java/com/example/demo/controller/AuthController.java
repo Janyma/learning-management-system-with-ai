@@ -17,6 +17,7 @@ import com.example.demo.dto.UserLoginDto;
 import com.example.demo.dto.UserRegistrationDto;
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
+import com.example.demo.security.JwtService;
 
 import jakarta.validation.Valid;
 
@@ -26,9 +27,11 @@ public class AuthController {
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
-    public AuthController(UserService userService, PasswordEncoder passwordEncoder) {
+    private final JwtService jwtService;
+    public AuthController(UserService userService, PasswordEncoder passwordEncoder, JwtService jwtService) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService=jwtService;
     }
 
         @RequestMapping("/register")
@@ -72,8 +75,12 @@ public class AuthController {
         if(!matches){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Username or password is uncorrect-"));
         }
+        String token =jwtService.generateToken(user.getUsername());
 
-        return ResponseEntity.ok(Map.of("message","Correct password"));
+        return ResponseEntity.ok(Map.of(
+            "message","Login successful",
+            "token", token,
+            "tokenType", "Bearer"));
         
 
 

@@ -1,66 +1,78 @@
 package com.example.demo;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.ResponseEntity;
+import static org.mockito.Mockito.when;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.springframework.test.web.servlet.MockMvc;
 
 import com.example.demo.controller.ChatController;
-import com.example.demo.dto.ChatRequest;
-import com.example.demo.dto.ChatResponse;
+import com.example.demo.security.JwtAuthenticationFilter;
+import com.example.demo.security.JwtService;
 import com.example.demo.service.ChatService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import java.util.Map;
 
+@WebMvcTest(ChatController.class)
 class ChatControllerTest {
 
-    private ChatController chatController;
-    private String lastReceivedMessage;
+    @Autowired
+    private MockMvc mockMvc;
 
-    @BeforeEach
-    void setUp() {
-        // Manueller Stub statt Mockito – kein ByteBuddy nötig
-        ChatService stubService = new ChatService() {
-            @Override
-            public String getChatResponse(String userMessage) {
-                lastReceivedMessage = userMessage;
-                return "AI says: " + userMessage;
-            }
-        };
-        chatController = new ChatController(stubService);
+    @MockitoBean
+    private ChatService chatService;
+
+    @MockitoBean
+    private JwtService jwtService;
+
+    @MockitoBean
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Test
+    @WithMockUser
+    void shouldReturnReplyWhenValidMessage() throws Exception {
+        when(chatService.getChatResponse("Hello")).thenReturn("AI says: Hello");
+
+        mockMvc.perform(post("/api/chat")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(Map.of("message", "Hello"))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.reply").value("AI says: Hello"));
     }
 
     @Test
-    void shouldReturnReplyWhenValidMessage() {
-        ChatRequest request = new ChatRequest();
-        request.setMessage("Hello");
-
-        ResponseEntity<ChatResponse> response = chatController.chat(request);
-
-        assertEquals(200, response.getStatusCode().value());
-        assertNotNull(response.getBody());
-        assertEquals("AI says: Hello", response.getBody().getReply());
-        assertEquals("Hello", lastReceivedMessage);
+    @WithMockUser
+    void shouldReturn400WhenMessageIsBlank() throws Exception {
+        mockMvc.perform(post("/api/chat")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(Map.of("message", ""))))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    void shouldPassMessageToChatService() {
-        ChatRequest request = new ChatRequest();
-        request.setMessage("Test message");
-
-        ResponseEntity<ChatResponse> response = chatController.chat(request);
-
-        assertEquals("Test message", lastReceivedMessage);
-        assertEquals("AI says: Test message", response.getBody().getReply());
+    @WithMockUser
+    void shouldReturn400WhenMessageIsMissing() throws Exception {
+        mockMvc.perform(post("/api/chat")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{}"))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    void shouldReturnOkStatus() {
-        ChatRequest request = new ChatRequest();
-        request.setMessage("any");
-
-        ResponseEntity<ChatResponse> response = chatController.chat(request);
-
-        assertEquals(200, response.getStatusCode().value());
+    void shouldReturn401WhenNotAuthenticated() throws Exception {
+        mockMvc.perform(post("/api/chat")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(Map.of("message", "Hello"))))
+                .andExpect(status().isUnauthorized());
     }
 }

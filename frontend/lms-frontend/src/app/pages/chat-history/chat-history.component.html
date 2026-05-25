@@ -1,0 +1,24 @@
+<div class="history-container">
+    <div class="history-header">
+        <h2>Your Conversations</h2>
+        <button class="new-chat-btn" (click)="startNewChat()">+ New Chat</button>
+    </div>
+
+    @if (loading()) {
+        <div class="loading-state">Loading conversations...</div>
+    } @else if (sessions().length === 0) {
+        <div class="empty-state">
+            <p>No conversations yet.</p>
+            <button (click)="startNewChat()">Start your first chat</button>
+        </div>
+    } @else {
+        <ul class="session-list">
+            @for (session of sessions(); track session.id) {
+                <li class="session-item" (click)="openSession(session.id)">
+                    <span class="session-title">{{ session.title }}</span>
+                    <span class="session-date">{{ session.createdAt | date:'short' }}</span>
+                </li>
+            }
+        </ul>
+    }
+</div>

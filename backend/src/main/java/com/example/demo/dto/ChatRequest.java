@@ -6,6 +6,8 @@ public class ChatRequest{
     @NotBlank(message = "Message must not be empty")
     private String message;
 
+    private Long chatSessionId;
+
     public ChatRequest() {}
 
     public String getMessage() {
@@ -16,4 +18,11 @@ public class ChatRequest{
         this.message = message;
     }
 
+    public Long getChatSessionId() {
+        return chatSessionId;
+    }
+
+    public void setChatSessionId(Long chatSessionId) {
+        this.chatSessionId = chatSessionId;
+    }
 }

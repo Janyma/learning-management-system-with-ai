@@ -65,7 +65,7 @@ public class ChatService {
     private String callAi(String userMessage) {
         RestTemplate restTemplate = new RestTemplate();
 
-        String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + apiKey;
+        String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent";
 
         String requestBody = """
                 {
@@ -77,10 +77,11 @@ public class ChatService {
                     }
                   ]
                 }
-                """.formatted(userMessage.replace("\"", "\\\"").replace("\n", "\\n"));
+                """.formatted(userMessage.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n"));
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("x-goog-api-key", apiKey);
 
         HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
 
@@ -88,13 +89,11 @@ public class ChatService {
             String response = restTemplate.postForObject(url, request, String.class);
 
             // Parse the response to extract the text
-            // Response structure: {"candidates":[{"content":{"parts":[{"text":"..."}]}}]}
             int textStart = response.indexOf("\"text\": \"") + 9;
             if (textStart < 9) {
                 textStart = response.indexOf("\"text\":\"") + 8;
             }
             int textEnd = response.indexOf("\"", textStart);
-            // Handle escaped quotes within the text
             while (textEnd > 0 && response.charAt(textEnd - 1) == '\\') {
                 textEnd = response.indexOf("\"", textEnd + 1);
             }

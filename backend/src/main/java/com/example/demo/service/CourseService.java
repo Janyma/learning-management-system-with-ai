@@ -62,4 +62,9 @@ public class CourseService {
         course.getSections().removeIf(s -> s.getId().equals(sectionId));
         courseRepository.save(course);
     }
+
+    public List<Section> getSectionsByCourseId(Long courseId) {
+        Course course = getCourseById(courseId);
+        return course.getSections();
+    }
 }

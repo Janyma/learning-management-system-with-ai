@@ -51,6 +51,11 @@ public class CourseController {
         return courseService.addSection(id, body.get("content"));
     }
 
+    @GetMapping("/{courseId}/sections")
+    public List<Section> getSections(@PathVariable Long courseId) {
+        return courseService.getSectionsByCourseId(courseId);
+    }
+
     @DeleteMapping("/{courseId}/sections/{sectionId}")
     public ResponseEntity<Void> removeSection(@PathVariable Long courseId, @PathVariable Long sectionId) {
         courseService.removeSection(courseId, sectionId);

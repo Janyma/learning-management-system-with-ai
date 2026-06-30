@@ -52,9 +52,7 @@ public class CourseService {
         Section section = new Section();
         section.setContent(content);
         section.setCourse(course);
-        course.getSections().add(section);
-        courseRepository.save(course);
-        return section;
+        return sectionRepository.save(section);
     }
 
     public void removeSection(Long courseId, Long sectionId) {

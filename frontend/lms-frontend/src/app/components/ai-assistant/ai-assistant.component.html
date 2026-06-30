@@ -1,0 +1,38 @@
+<button class="assistant-toggle" (click)="toggle()" [class.assistant-toggle--hidden]="open()">
+  ✨ Ask AI
+</button>
+
+@if (open()) {
+  <aside class="assistant-panel">
+    <header class="assistant-panel__header">
+      <span>✨ AI Assistant</span>
+      <button class="assistant-panel__close" (click)="toggle()" aria-label="Close">✕</button>
+    </header>
+
+    <div class="assistant-panel__messages">
+      @if (messages().length === 0) {
+        <p class="assistant-panel__hint">Ask me anything about this section.</p>
+      }
+      @for (msg of messages(); track $index) {
+        <div class="message" [class]="msg.role">
+          <strong>{{ msg.role === 'user' ? 'You' : 'AI' }}:</strong>
+          <span>{{ msg.text }}</span>
+        </div>
+      }
+      @if (loading()) {
+        <div class="message assistant loading">Thinking...</div>
+      }
+    </div>
+
+    <form class="assistant-panel__input" (ngSubmit)="send()">
+      <input
+        type="text"
+        [(ngModel)]="message"
+        name="message"
+        placeholder="Ask about this section..."
+        autocomplete="off"
+      />
+      <button type="submit" [disabled]="loading()">Send</button>
+    </form>
+  </aside>
+}

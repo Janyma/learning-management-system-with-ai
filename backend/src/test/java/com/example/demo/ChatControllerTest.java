@@ -45,7 +45,7 @@ class ChatControllerTest {
     @WithMockUser(username = "testuser")
     void shouldReturnReplyWhenValidMessage() throws Exception {
         ChatService.ChatResult result = new ChatService.ChatResult("AI says: Hello", 1L);
-        when(chatService.getChatResponse(eq("Hello"), isNull(), eq("testuser"))).thenReturn(result);
+        when(chatService.getChatResponse(eq("Hello"), isNull(), eq("testuser"), isNull())).thenReturn(result);
 
         mockMvc.perform(post("/api/chat")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -59,7 +59,7 @@ class ChatControllerTest {
     @WithMockUser(username = "testuser")
     void shouldReturnReplyWithExistingSession() throws Exception {
         ChatService.ChatResult result = new ChatService.ChatResult("AI says: Hi", 5L);
-        when(chatService.getChatResponse(eq("Hi"), eq(5L), eq("testuser"))).thenReturn(result);
+        when(chatService.getChatResponse(eq("Hi"), eq(5L), eq("testuser"), isNull())).thenReturn(result);
 
         mockMvc.perform(post("/api/chat")
                 .contentType(MediaType.APPLICATION_JSON)

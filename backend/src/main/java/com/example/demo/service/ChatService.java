@@ -45,15 +45,21 @@ public class ChatService {
         return chatSessionRepository.save(session);
     }
 
-    public ChatResult getChatResponse(String userMessage, Long chatSessionId, String username) {
+    public ChatResult getChatResponse(String userMessage, Long chatSessionId, String username, String context) {
         ChatSession session = getOrCreateSession(chatSessionId, username, userMessage);
 
         // Save user message
         ChatMessage userMsg = new ChatMessage(userMessage, "user", session);
         chatMessageRepository.save(userMsg);
 
-        // Get AI response
-        String aiReply = callAi(userMessage);
+        // Get AI response, grounded in the on-screen content when provided
+        String prompt = (context == null || context.isBlank())
+                ? userMessage
+                : "You are an assistant helping a student understand the course content shown below. " +
+                  "Answer the student's question using this content as context.\n\n" +
+                  "CONTENT:\n" + context + "\n\n" +
+                  "QUESTION:\n" + userMessage;
+        String aiReply = callAi(prompt);
 
         // Save AI response
         ChatMessage aiMsg = new ChatMessage(aiReply, "ai", session);

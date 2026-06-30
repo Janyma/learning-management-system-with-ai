@@ -39,7 +39,7 @@ public class ChatController{
 
         String username = authentication.getName();
         ChatService.ChatResult result = chatService.getChatResponse(
-                request.getMessage(), request.getChatSessionId(), username);
+                request.getMessage(), request.getChatSessionId(), username, request.getContext());
 
         return ResponseEntity.ok(new ChatResponse(result.getReply(), result.getSessionId()));
     }

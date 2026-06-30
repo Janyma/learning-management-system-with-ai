@@ -16,13 +16,13 @@ export class CourseDetailComponent implements OnInit {
   course = signal<Course | null>(null);
   loading = signal(true);
   error = signal(false);
+  activeSectionId = signal<number | null>(null);
 
-  sectionsContext = computed(() => {
+  activeSection = computed(() => {
     const course = this.course();
-    if (!course) return '';
-    return [course.title, course.description, ...course.sections.map(s => s.content)]
-      .filter(Boolean)
-      .join('\n\n');
+    const id = this.activeSectionId();
+    if (!course || id === null) return null;
+    return course.sections.find(s => s.id === id) ?? null;
   });
 
   ngOnInit() {
@@ -30,6 +30,7 @@ export class CourseDetailComponent implements OnInit {
     this.courseService.getCourse(courseId).subscribe({
       next: (course) => {
         this.course.set(course);
+        this.activeSectionId.set(course.sections[0]?.id ?? null);
         this.loading.set(false);
       },
       error: () => {
@@ -37,5 +38,9 @@ export class CourseDetailComponent implements OnInit {
         this.loading.set(false);
       }
     });
+  }
+
+  selectSection(sectionId: number) {
+    this.activeSectionId.set(sectionId);
   }
 }

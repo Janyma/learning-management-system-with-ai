@@ -13,16 +13,26 @@
     @if (course()!.sections.length === 0) {
       <p class="status">This course has no sections yet.</p>
     } @else {
-      <div class="section-list">
-        @for (section of course()!.sections; track section.id) {
-          <article class="section-card">
-            <span class="section-card__index">Section {{ $index + 1 }}</span>
-            <p class="section-card__content">{{ section.content }}</p>
-          </article>
-        }
+      <div class="course-layout">
+        <nav class="section-nav">
+          @for (section of course()!.sections; track section.id) {
+            <button
+              type="button"
+              class="section-nav__item"
+              [class.section-nav__item--active]="activeSectionId() === section.id"
+              (click)="selectSection(section.id)"
+            >
+              Section {{ $index + 1 }}
+            </button>
+          }
+        </nav>
+
+        <article class="section-content">
+          <p class="section-content__text">{{ activeSection()?.content }}</p>
+        </article>
       </div>
 
-      <app-ai-assistant [context]="sectionsContext()" />
+      <app-ai-assistant [sectionId]="activeSectionId()" [context]="activeSection()?.content ?? ''" />
     }
   }
 </div>

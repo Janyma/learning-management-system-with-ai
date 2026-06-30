@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, computed, inject, Input, OnChanges, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LoginService } from '../../services/login-service/login.service';
 
@@ -14,9 +14,9 @@ interface SectionConversation {
   templateUrl: './ai-assistant.component.html',
   styleUrl: './ai-assistant.component.scss',
 })
-export class AiAssistantComponent implements OnChanges {
-  @Input() sectionId: number | null = null;
-  @Input() context = '';
+export class AiAssistantComponent {
+  sectionId = input<number | null>(null);
+  context = input('');
 
   private http = inject(HttpClient);
   private loginService = inject(LoginService);
@@ -25,18 +25,13 @@ export class AiAssistantComponent implements OnChanges {
   message = '';
   loading = signal(false);
 
-  private activeSectionId = signal<number | null>(null);
   private conversations = signal<Map<number, SectionConversation>>(new Map());
 
   messages = computed(() => {
-    const id = this.activeSectionId();
+    const id = this.sectionId();
     if (id === null) return [];
     return this.conversations().get(id)?.messages ?? [];
   });
-
-  ngOnChanges() {
-    this.activeSectionId.set(this.sectionId);
-  }
 
   toggle() {
     this.open.update(o => !o);
@@ -53,7 +48,7 @@ export class AiAssistantComponent implements OnChanges {
 
   send() {
     const text = this.message.trim();
-    const sectionId = this.activeSectionId();
+    const sectionId = this.sectionId();
     if (!text || sectionId === null) return;
 
     this.updateConversation(sectionId, c => ({ ...c, messages: [...c.messages, { role: 'user', text }] }));
@@ -66,7 +61,7 @@ export class AiAssistantComponent implements OnChanges {
       Authorization: `Bearer ${this.loginService.getToken()}`
     });
 
-    const body: any = { message: text, context: this.context };
+    const body: any = { message: text, context: this.context() };
     if (chatSessionId) {
       body.chatSessionId = chatSessionId;
     }

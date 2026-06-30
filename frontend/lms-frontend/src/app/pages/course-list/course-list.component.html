@@ -1,0 +1,21 @@
+<div class="course-list-container">
+  <h1>Courses</h1>
+
+  @if (loading()) {
+    <p class="status">Loading courses...</p>
+  } @else if (error()) {
+    <p class="status status--error">Could not load courses.</p>
+  } @else if (courses().length === 0) {
+    <p class="status">No courses available yet.</p>
+  } @else {
+    <div class="course-grid">
+      @for (course of courses(); track course.id) {
+        <a class="course-card" [routerLink]="['/courses', course.id]">
+          <h2>{{ course.title }}</h2>
+          <p>{{ course.description }}</p>
+          <span class="course-card__sections">{{ course.sections.length }} section(s)</span>
+        </a>
+      }
+    </div>
+  }
+</div>

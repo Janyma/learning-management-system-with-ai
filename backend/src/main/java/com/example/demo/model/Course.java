@@ -1,5 +1,7 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,6 +31,7 @@ public class Course {
     @Column(length = 1000)
     private String description;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "courses")
     private Set<User> users = new HashSet<>();
 

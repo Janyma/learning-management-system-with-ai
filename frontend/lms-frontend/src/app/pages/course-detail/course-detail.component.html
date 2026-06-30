@@ -1,0 +1,26 @@
+<div class="course-detail-container">
+  <a class="back-link" routerLink="/courses">&larr; Back to courses</a>
+
+  @if (loading()) {
+    <p class="status">Loading course...</p>
+  } @else if (error() || !course()) {
+    <p class="status status--error">Could not load this course.</p>
+  } @else {
+    <h1>{{ course()!.title }}</h1>
+    <p class="description">{{ course()!.description }}</p>
+
+    <h2>Sections</h2>
+    @if (course()!.sections.length === 0) {
+      <p class="status">This course has no sections yet.</p>
+    } @else {
+      <div class="section-list">
+        @for (section of course()!.sections; track section.id) {
+          <article class="section-card">
+            <span class="section-card__index">Section {{ $index + 1 }}</span>
+            <p class="section-card__content">{{ section.content }}</p>
+          </article>
+        }
+      </div>
+    }
+  }
+</div>

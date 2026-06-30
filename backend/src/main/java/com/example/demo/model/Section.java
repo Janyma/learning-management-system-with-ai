@@ -1,5 +1,7 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,6 +22,7 @@ public class Section {
     @Column(columnDefinition = "TEXT")
     private String content;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "course_id")
     private Course course;
